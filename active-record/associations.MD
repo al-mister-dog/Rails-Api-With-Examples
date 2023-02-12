@@ -88,7 +88,7 @@ end
 The association methods module is included immediately after the generated attributes methods module, meaning an association will override the methods for an attribute with the same name.
 *(When you call ```self.owner = new_owner```, the custom ```owner= method``` that you defined in the model will be called first. This method sets the ```old_owner``` to the current ```owner``` and then calls ```super```. The call to ```super``` invokes the original generated ```owner=``` method, which is responsible for actually setting the owner association. So, in this example, both the custom ```owner=``` method and the original generated ```owner=``` method will be called, in that order.)*
 
-## Cardinality and associations
+## Cardinality[^7] and associations
 Active Record associations can be used to describe one-to-one, one-to-many and many-to-many relationships between models. Each model uses an association to describe its role in the relation. The ```belongs_to``` association is always used in the model that has the foreign-key.
 
 ### One-to-one
@@ -362,3 +362,13 @@ user.save
 [^6]: In the context of Ruby on Rails documentation, the "#" symbol is used to separate the class name from the instance method name. In this case, "Project#milestones.create" means that the create method is an instance method of the milestones method, which is a part of the Project class.
 
 An instance method is a method that can be called on an instance of a class, as opposed to a class method, which can be called on the class itself. In other words, an instance method operates on an instance of the class and can access and modify the state of that instance, while a class method operates on the class and doesn't have access to any specific instance.
+
+[^7]: In database design and ER modeling, cardinality refers to the relationship between two entities and how many instances of one entity are associated with a single instance of the other entity. Cardinality can be expressed in four ways:
+
+One to One (1:1) - One instance of one entity is associated with one and only one instance of the other entity.
+
+One to Many (1:N) - One instance of one entity is associated with many instances of the other entity.
+
+Many to One (N:1) - Many instances of one entity are associated with one instance of the other entity.
+
+Many to Many (N:M) - Many instances of one entity are associated with many instances of the other entity.
