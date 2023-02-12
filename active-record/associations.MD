@@ -129,7 +129,8 @@ class Project < ActiveRecord::Base
   has_many :assignments
   has_many :programmers, through: :assignments
 end
-
+```
+```
 -- Assignment table
 +----+-------------+------------+
 | id | programmer_id | project_id |
@@ -156,7 +157,6 @@ end
 +----+---------+
 ```
 
-
 For the second way, use has_and_belongs_to_many in both models. This requires a join table that has no corresponding model or primary key.
 ```ruby
 class Programmer < ActiveRecord::Base
@@ -165,7 +165,8 @@ end
 class Project < ActiveRecord::Base
   has_and_belongs_to_many :programmers    # foreign keys in the join table
 end
-
+```
+```
 -- Programmers_Projects join table
 +-------------+------------+
 | programmer_id | project_id |
