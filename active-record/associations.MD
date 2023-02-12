@@ -262,7 +262,7 @@ You can manipulate objects and associations before they are saved to the databas
 You can set the :autosave option on a has_one, belongs_to, has_many, or has_and_belongs_to_many association. Setting it to true will always save the members, whereas setting it to false will never save the members. More details about :autosave option is available at AutosaveAssociation.
 
 ### One-to-one associations
-- Assigning an object to a has_one association automatically saves that object and the object being replaced (if there is one), in order to update their foreign keys - except if the parent object is unsaved (new_record? == true).
+Assigning an object to a has_one association automatically saves that object and the object being replaced (if there is one), in order to update their foreign keys - except if the parent object is unsaved (new_record? == true).
 
 ```ruby
 class User < ApplicationRecord
@@ -279,7 +279,7 @@ user.save # This will save the user and the address, updating the foreign key on
 user.build_address(street: "456 Main St", city: "Anytown", state: "CA")
 ```
 
-- If either of these saves fail (due to one of the objects being invalid), an ActiveRecord::RecordNotSaved exception is raised and the assignment is cancelled.
+If either of these saves fail (due to one of the objects being invalid), an ActiveRecord::RecordNotSaved exception is raised and the assignment is cancelled.
 ```ruby
 class User < ApplicationRecord
   has_one :address
@@ -292,7 +292,7 @@ address = Address.new(street: "", city: "Anytown", state: "CA")
 user.address = address
 ```
 
-- If you wish to assign an object to a has_one association without saving it, use the #build_association method (documented below). The object being replaced will still be saved to update its foreign key.
+If you wish to assign an object to a has_one association without saving it, use the #build_association method (documented below). The object being replaced will still be saved to update its foreign key.
 ```ruby
 class User < ApplicationRecord
   has_one :address
@@ -304,7 +304,7 @@ user = User.first
 new_address = user.build_address(street: "456 Main St", city: "Anytown", state: "CA")
 ```
 
-- Assigning an object to a belongs_to association does not save the object, since the foreign key field belongs on the parent. It does not save the parent either.
+Assigning an object to a belongs_to association does not save the object, since the foreign key field belongs on the parent. It does not save the parent either.
 ```ruby
 class Address < ApplicationRecord
   belongs_to :user
@@ -318,7 +318,7 @@ address.save # This will save the address, updating the foreign key on the addre
 ```
 
 ### Collections
-- Adding an object to a collection (has_many or has_and_belongs_to_many) automatically saves that object, except if the parent object (the owner of the collection) is not yet stored in the database.
+Adding an object to a collection (has_many or has_and_belongs_to_many) automatically saves that object, except if the parent object (the owner of the collection) is not yet stored in the database.
 ```ruby
 class User < ApplicationRecord
   has_many :posts
@@ -387,7 +387,23 @@ user.posts << post
 user.save
 ```
 
+## Customizing the query
+Associations are built from Relation objects, and you can use the Relation syntax to customize them. For example, to add a condition:
+```ruby
+class Blog < ActiveRecord::Base
+  has_many :published_posts, -> { where(published: true) }, class_name: 'Post'
+end
+```
+Inside the ```-> { ... }``` block you can use all of the usual Relation methods.
 
+### Accessing the owner object
+Sometimes it is useful to have access to the owner object when building the query. The owner is passed as a parameter to the block. For example, the following association would find all events that occur on the user's birthday:
+```ruby
+class User < ActiveRecord::Base
+  has_many :birthday_events, ->(user) { where(starts_on: user.birthday) }, class_name: 'Event'
+end
+```
+Note: Joining, eager loading, and preloading of these associations is not possible. These operations happen before instance creation and the scope will be called with a nil argument.
 
 
 
