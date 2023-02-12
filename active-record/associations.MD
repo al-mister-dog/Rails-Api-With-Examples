@@ -1,5 +1,5 @@
 # Associations
-Associations are a set of macro-like[^1] class methods for tying objects together through foreign keys. They express relationships like “Project has one Project Manager” or “Project belongs to a Portfolio”. Each macro adds a number of methods to the class which are specialized according to the collection[^2] or association symbol[^3] and the options hash[^4]. It works much the same way as Ruby's own attr* methods.[^5]
+Associations are a set of macro-like[^bignote] class methods for tying objects together through foreign keys. They express relationships like “Project has one Project Manager” or “Project belongs to a Portfolio”. Each macro adds a number of methods to the class which are specialized according to the collection[^bignote] or association symbol[^bignote] and the options hash[^bignote] It works much the same way as Ruby's own attr* methods.[^bignote]
 
 ```ruby
 class Project < ActiveRecord::Base
