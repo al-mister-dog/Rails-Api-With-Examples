@@ -396,6 +396,38 @@ end
 ```
 Inside the ```-> { ... }``` block you can use all of the usual Relation methods.
 
+*A "Relation" object in Ruby on Rails represents a set of records from a database table that can be queried and manipulated through various methods.*
+
+*The "Relation syntax" refers to the way you can use the Relation object to customize and manipulate the records. The syntax is used within the ```-> { ... }``` block.*
+
+*Here are a few examples of the Relation syntax:*
+
+***Adding a condition to a relation:***
+```ruby
+class Blog < ActiveRecord::Base
+  has_many :published_posts, -> { where(published: true) }, class_name: 'Post'
+end
+```
+*In this example, the ```where(published: true)``` method is used to add a condition to the relation, so that only published posts are retrieved.*
+
+*Sorting a relation:*
+```ruby
+class User < ActiveRecord::Base
+  has_many :posts, -> { order(created_at: :desc) }
+end
+```
+*In this example, the ```order(created_at: :desc)``` method is used to sort the relation so that the most recently created posts are retrieved first.*
+
+Limiting a relation:
+```ruby
+class User < ActiveRecord::Base
+  has_many :recent_posts, -> { order(created_at: :desc).limit(5) }
+end
+```
+*In this example, the limit(5) method is used to limit the relation to only retrieve the most recent 5 posts.*
+
+*These are just a few examples of the Relation syntax in Ruby on Rails. You can use a combination of various methods to customize the relation as needed.*
+
 ### Accessing the owner object
 Sometimes it is useful to have access to the owner object when building the query. The owner is passed as a parameter to the block. For example, the following association would find all events that occur on the user's birthday:
 ```ruby
