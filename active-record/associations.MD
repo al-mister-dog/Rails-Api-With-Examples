@@ -84,9 +84,7 @@ class Car < ActiveRecord::Base
 end
 ```
 The association methods module is included immediately after the generated attributes methods module, meaning an association will override the methods for an attribute with the same name.
-*(When you call ```self.owner = new_owner```, the custom ```owner= method``` that you defined in the model will be called first. This method sets the ```old_owner``` to the current ```owner``` and then calls ```super```. The call to ```super``` invokes the original generated ```owner=``` method, which is responsible for actually setting the owner association.
-
-So, in this example, both the custom ```owner=``` method and the original generated ```owner=``` method will be called, in that order.)*
+*(When you call ```self.owner = new_owner```, the custom ```owner= method``` that you defined in the model will be called first. This method sets the ```old_owner``` to the current ```owner``` and then calls ```super```. The call to ```super``` invokes the original generated ```owner=``` method, which is responsible for actually setting the owner association. So, in this example, both the custom ```owner=``` method and the original generated ```owner=``` method will be called, in that order.)*
 
 ### Unsaved objects and associations
 You can manipulate objects and associations before they are saved to the database, but there is some special behavior you should be aware of, mostly involving the saving of associated objects.
