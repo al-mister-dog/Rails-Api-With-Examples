@@ -20,7 +20,7 @@ The project class now has the following methods (and more) to ease the traversal
 * Project#categories.empty?, Project#categories.size, Project#categories, Project#categories<<(category1), Project#categories.delete(category1), Project#categories.destroy(category1)
 
 ## Auto-generated methods
-*Below are a list of auto-generated methods. The words 'other' and 'others' are placeholders for the associated class. For example, the generated method 'reload_other' could be Post.reload_user, and others.size could be User.posts.size*
+*(Below are a list of auto-generated methods. The words 'other' and 'others' are placeholders for the associated class. For example, the generated method 'reload_other' could be Post.reload_user, and others.size could be User.posts.size)*
 
 See also Instance Public methods below for more details.
 
@@ -70,7 +70,23 @@ others.reset                      |   X   |    X     |    X
 others.reload                     |   X   |    X     |    X
 ```
 
+### Overriding generated methods
+*(The auto-generated)* association methods are generated in a module included into the model class, making overrides easy. The original generated method can thus be called with super:
+```ruby
+class Car < ActiveRecord::Base
+  belongs_to :owner
+  belongs_to :old_owner
 
+  def owner=(new_owner)
+    self.old_owner = self.owner
+    super
+  end
+end
+```
+The association methods module is included immediately after the generated attributes methods module, meaning an association will override the methods for an attribute with the same name.
+*(When you call ```self.owner = new_owner```, the custom ```owner= method``` that you defined in the model will be called first. This method sets the ```old_owner``` to the current ```owner``` and then calls ```super```. The call to ```super``` invokes the original generated ```owner=``` method, which is responsible for actually setting the owner association.
+
+So, in this example, both the custom ```owner=``` method and the original generated ```owner=``` method will be called, in that order.)*
 
 ### Unsaved objects and associations
 You can manipulate objects and associations before they are saved to the database, but there is some special behavior you should be aware of, mostly involving the saving of associated objects.
