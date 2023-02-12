@@ -82,6 +82,8 @@ class Car < ActiveRecord::Base
     super
   end
 end
+
+# The advantage of this approach is that it makes it easy to override the generated methods if necessary. For example, if you want to track the previous owner of a car when it is assigned to a new owner, you can override the owner= method as shown in the code example. The code defines a custom owner= method that first sets the old_owner to the current owner and then calls the original generated method with super.
 ```
 The association methods module is included immediately after the generated attributes methods module, meaning an association will override the methods for an attribute with the same name.
 *(When you call ```self.owner = new_owner```, the custom ```owner= method``` that you defined in the model will be called first. This method sets the ```old_owner``` to the current ```owner``` and then calls ```super```. The call to ```super``` invokes the original generated ```owner=``` method, which is responsible for actually setting the owner association. So, in this example, both the custom ```owner=``` method and the original generated ```owner=``` method will be called, in that order.)*
