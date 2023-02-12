@@ -20,6 +20,8 @@ The project class now has the following methods (and more) to ease the traversal
 * Project#categories.empty?, Project#categories.size, Project#categories, Project#categories<<(category1), Project#categories.delete(category1), Project#categories.destroy(category1)
 
 ## Auto-generated methods
+*Below are a list of auto-generated methods. The words 'other' and 'others' are placeholders for the associated class. For example, the generated method 'reload_other' could be Post.reload_user, and others.size could be User.posts.size*
+
 See also Instance Public methods below for more details.
 
 ### Singular associations (one-to-one)
