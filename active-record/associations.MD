@@ -9,7 +9,7 @@ class Project < ActiveRecord::Base
   has_and_belongs_to_many :categories
 end
 ```
-[^1]**Macro-like:** In Ruby on Rails, a macro is a method that generates other methods dynamically. Macros can be used to generate methods that provide common functionality across multiple models, making it easier to manage and maintain your code.
+[^1]: In Ruby on Rails, a macro is a method that generates other methods dynamically. Macros can be used to generate methods that provide common functionality across multiple models, making it easier to manage and maintain your code.
 
 Macros are often used in Rails through Active Record, the object-relational mapping (ORM) layer of the framework. Active Record provides a number of built-in macros, such as belongs_to, has_many, and has_one, which define relationships between models.
 
@@ -25,7 +25,7 @@ end
 ```
 With these two lines of code, Rails will automatically create several methods for you, including user.posts and post.user. These methods allow you to retrieve the posts belonging to a user and the user associated with a post, respectively.
 
-[^2]**Collection:** In Ruby on Rails, a collection refers to a group of related objects. For example, a User model might have many Posts, and the posts belonging to a user can be thought of as a collection of posts. When you use the has_many macro in Active Record, you are creating a one-to-many relationship between two models, with one model (the user) having a collection of related objects (the posts).
+[^2]: In Ruby on Rails, a collection refers to a group of related objects. For example, a User model might have many Posts, and the posts belonging to a user can be thought of as a collection of posts. When you use the has_many macro in Active Record, you are creating a one-to-many relationship between two models, with one model (the user) having a collection of related objects (the posts).
 
 [^3]: An association symbol is a symbol that represents the type of association being created between two models. For example, the :posts symbol in has_many :posts represents the collection of posts that belong to a user. Other common association symbols include :belongs_to, :has_one, and :has_many :through.
 
