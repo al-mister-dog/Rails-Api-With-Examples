@@ -165,13 +165,13 @@ end
 ```
 ```
 -- Assignment table
-+----+-------------+------------+
++----+---------------+------------+
 | id | programmer_id | project_id |
-+----+-------------+------------+
-| 1  | 1            | 1          |
-| 2  | 1            | 2          |
-| 3  | 2            | 1          |
-+----+-------------+------------+
++----+---------------+------------+
+| 1  | 1            | 1           |
+| 2  | 1            | 2           |
+| 3  | 2            | 1           |
++----+--------------+-------------+
 
 -- Programmer table
 +----+--------+
@@ -201,13 +201,13 @@ end
 ```
 ```
 -- Programmers_Projects join table
-+-------------+------------+
++-------------+--------------+
 | programmer_id | project_id |
-+-------------+------------+
-| 1            | 1          |
-| 1            | 2          |
-| 2            | 1          |
-+-------------+------------+
++-------------+--------------+
+| 1            | 1           |
+| 1            | 2           |
+| 2            | 1           |
++-------------+--------------+
 
 -- Programmer table
 +----+--------+
@@ -425,12 +425,4 @@ user.save
 
 An instance method is a method that can be called on an instance of a class, as opposed to a class method, which can be called on the class itself. In other words, an instance method operates on an instance of the class and can access and modify the state of that instance, while a class method operates on the class and doesn't have access to any specific instance.
 
-[^7]: In database design and ER modeling, cardinality refers to the relationship between two entities and how many instances of one entity are associated with a single instance of the other entity. Cardinality can be expressed in four ways:
-
-One to One (1:1) - One instance of one entity is associated with one and only one instance of the other entity.
-
-One to Many (1:N) - One instance of one entity is associated with many instances of the other entity.
-
-Many to One (N:1) - Many instances of one entity are associated with one instance of the other entity.
-
-Many to Many (N:M) - Many instances of one entity are associated with many instances of the other entity.
+[^7]: In database design and ER modeling, cardinality refers to the relationship between two entities and how many instances of one entity are associated with a single instance of the other entity. Cardinality can be expressed in four ways: **One to One (1:1)** - One instance of one entity is associated with one and only one instance of the other entity. **One to Many (1:N)** - One instance of one entity is associated with many instances of the other entity. **Many to One (N:1)** - Many instances of one entity are associated with one instance of the other entity. **Many to Many (N:M)** - Many instances of one entity are associated with many instances of the other entity.
