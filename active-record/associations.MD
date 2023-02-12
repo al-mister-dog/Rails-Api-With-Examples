@@ -11,13 +11,13 @@ end
 ```
 The project class now has the following methods (and more) to ease the traversal and manipulation of its relationships:
 
-*Project#portfolio[^6], Project#portfolio=(portfolio), Project#reload_portfolio
+* Project#portfolio[^6], Project#portfolio=(portfolio), Project#reload_portfolio
 
-*Project#project_manager, Project#project_manager=(project_manager), Project#reload_project_manager
+* Project#project_manager, Project#project_manager=(project_manager), Project#reload_project_manager
 
-*Project#milestones.empty?, Project#milestones.size, Project#milestones, Project#milestones<<(milestone), Project#milestones.delete(milestone), Project#milestones.destroy(milestone), Project#milestones.find(milestone_id), Project#milestones.build, Project#milestones.create
+* Project#milestones.empty?, Project#milestones.size, Project#milestones, Project#milestones<<(milestone), Project#milestones.delete(milestone), Project#milestones.destroy(milestone), Project#milestones.find(milestone_id), Project#milestones.build, Project#milestones.create
 
-*Project#categories.empty?, Project#categories.size, Project#categories, Project#categories<<(category1), Project#categories.delete(category1), Project#categories.destroy(category1)
+* Project#categories.empty?, Project#categories.size, Project#categories, Project#categories<<(category1), Project#categories.delete(category1), Project#categories.destroy(category1)
 
 
 
