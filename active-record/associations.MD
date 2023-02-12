@@ -102,6 +102,23 @@ class Office < ActiveRecord::Base
   belongs_to :employee    # foreign key - employee_id
 end
 ```
+```
+-- Employee table
++----+--------+
+| id | name   |
++----+--------+
+| 1  | John   |
+| 2  | Sarah  |
++----+--------+
+
+-- Office table
++----+---------+-------------+
+| id | title   | employee_id |
++----+---------+-------------+
+| 1  | Office1 | 2           |
+| 2  | Office2 | 1           |
++----+---------+-------------+
+```
 ### One-to-many
 Use ```has_many``` in the base, and ```belongs_to``` in the associated model.
 ```ruby
@@ -111,6 +128,22 @@ end
 class Employee < ActiveRecord::Base
   belongs_to :manager     # foreign key - manager_id
 end
+```
+```
+-- Manager table
++----+--------+
+| id | name   |
++----+--------+
+| 1  | Fred   |
++----+--------+
+
+-- Employee table
++----+---------+-------------+
+| id | name    | manager_id  |
++----+---------+-------------+
+| 1  | John    | 1           |
+| 2  | Sarah   | 1           |
++----+---------+-------------+
 ```
 ### Many-to-many
 There are two ways to build a many-to-many relationship.
@@ -194,6 +227,34 @@ end
 ```
 Choosing which way to build a many-to-many relationship is not always simple. If you need to work with the relationship model as its own entity, use has_many :through. Use has_and_belongs_to_many when working with legacy schemas or when you never work directly with the relationship itself.
 
+## Is it a belongs_to or has_one association?
+Both express a 1-1 relationship. The difference is mostly where to place the foreign key, which goes on the table for the class declaring the belongs_to relationship.
+```ruby
+class User < ActiveRecord::Base
+  # I reference an account.
+  belongs_to :account
+end
+
+class Account < ActiveRecord::Base
+  # One user references me.
+  has_one :user
+end
+```
+The tables for these classes could look something like:
+```
+CREATE TABLE users (
+  id bigint NOT NULL auto_increment,
+  account_id bigint default NULL,
+  name varchar default NULL,
+  PRIMARY KEY  (id)
+)
+
+CREATE TABLE accounts (
+  id bigint NOT NULL auto_increment,
+  name varchar default NULL,
+  PRIMARY KEY  (id)
+)
+```
 
 ## Unsaved objects and associations
 You can manipulate objects and associations before they are saved to the database, but there is some special behavior you should be aware of, mostly involving the saving of associated objects.
