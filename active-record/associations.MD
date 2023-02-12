@@ -88,12 +88,118 @@ end
 The association methods module is included immediately after the generated attributes methods module, meaning an association will override the methods for an attribute with the same name.
 *(When you call ```self.owner = new_owner```, the custom ```owner= method``` that you defined in the model will be called first. This method sets the ```old_owner``` to the current ```owner``` and then calls ```super```. The call to ```super``` invokes the original generated ```owner=``` method, which is responsible for actually setting the owner association. So, in this example, both the custom ```owner=``` method and the original generated ```owner=``` method will be called, in that order.)*
 
-### Unsaved objects and associations
+## Cardinality and associations
+Active Record associations can be used to describe one-to-one, one-to-many and many-to-many relationships between models. Each model uses an association to describe its role in the relation. The ```belongs_to``` association is always used in the model that has the foreign-key.
+
+### One-to-one
+Use ```has_one``` in the base, and ```belongs_to``` in the associated model.
+
+```ruby
+class Employee < ActiveRecord::Base
+  has_one :office
+end
+class Office < ActiveRecord::Base
+  belongs_to :employee    # foreign key - employee_id
+end
+```
+### One-to-many
+Use ```has_many``` in the base, and ```belongs_to``` in the associated model.
+```ruby
+class Manager < ActiveRecord::Base
+  has_many :employees
+end
+class Employee < ActiveRecord::Base
+  belongs_to :manager     # foreign key - manager_id
+end
+```
+### Many-to-many
+There are two ways to build a many-to-many relationship.
+
+The first way uses a ```has_many``` association with the ```:through``` option and a join model, so there are two stages of associations.
+```ruby
+class Assignment < ActiveRecord::Base
+  belongs_to :programmer  # foreign key - programmer_id
+  belongs_to :project     # foreign key - project_id
+end
+class Programmer < ActiveRecord::Base
+  has_many :assignments
+  has_many :projects, through: :assignments
+end
+class Project < ActiveRecord::Base
+  has_many :assignments
+  has_many :programmers, through: :assignments
+end
+
+-- Assignment table
++----+-------------+------------+
+| id | programmer_id | project_id |
++----+-------------+------------+
+| 1  | 1            | 1          |
+| 2  | 1            | 2          |
+| 3  | 2            | 1          |
++----+-------------+------------+
+
+-- Programmer table
++----+--------+
+| id | name   |
++----+--------+
+| 1  | John   |
+| 2  | Sarah  |
++----+--------+
+
+-- Project table
++----+---------+
+| id | title   |
++----+---------+
+| 1  | Project1|
+| 2  | Project2|
++----+---------+
+```
+
+
+For the second way, use has_and_belongs_to_many in both models. This requires a join table that has no corresponding model or primary key.
+```ruby
+class Programmer < ActiveRecord::Base
+  has_and_belongs_to_many :projects       # foreign keys in the join table
+end
+class Project < ActiveRecord::Base
+  has_and_belongs_to_many :programmers    # foreign keys in the join table
+end
+
+-- Programmers_Projects join table
++-------------+------------+
+| programmer_id | project_id |
++-------------+------------+
+| 1            | 1          |
+| 1            | 2          |
+| 2            | 1          |
++-------------+------------+
+
+-- Programmer table
++----+--------+
+| id | name   |
++----+--------+
+| 1  | John   |
+| 2  | Sarah  |
++----+--------+
+
+-- Project table
++----+---------+
+| id | title   |
++----+---------+
+| 1  | Project1|
+| 2  | Project2|
++----+---------+
+```
+Choosing which way to build a many-to-many relationship is not always simple. If you need to work with the relationship model as its own entity, use has_many :through. Use has_and_belongs_to_many when working with legacy schemas or when you never work directly with the relationship itself.
+
+
+## Unsaved objects and associations
 You can manipulate objects and associations before they are saved to the database, but there is some special behavior you should be aware of, mostly involving the saving of associated objects.
 
 You can set the :autosave option on a has_one, belongs_to, has_many, or has_and_belongs_to_many association. Setting it to true will always save the members, whereas setting it to false will never save the members. More details about :autosave option is available at AutosaveAssociation.
 
-#### One-to-one associations
+### One-to-one associations
 - Assigning an object to a has_one association automatically saves that object and the object being replaced (if there is one), in order to update their foreign keys - except if the parent object is unsaved (new_record? == true).
 
 ```ruby
@@ -149,7 +255,7 @@ address.user = user
 address.save # This will save the address, updating the foreign key on the address record to match the ID of the user, but it will not save the user.
 ```
 
-#### Collections
+### Collections
 - Adding an object to a collection (has_many or has_and_belongs_to_many) automatically saves that object, except if the parent object (the owner of the collection) is not yet stored in the database.
 ```ruby
 class User < ApplicationRecord
@@ -218,6 +324,30 @@ user.posts << post
 # This will save the user and all unsaved members of its collection of posts.
 user.save
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 [^1]: In Ruby on Rails, a macro is a method that generates other methods dynamically. Macros can be used to generate methods that provide common functionality across multiple models, making it easier to manage and maintain your code.
 
