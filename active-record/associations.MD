@@ -437,7 +437,7 @@ end
 ```
 Note: Joining, eager loading, and preloading of these associations is not possible. These operations happen before instance creation and the scope will be called with a nil argument.
 
-### Association callbacks
+## Association callbacks
 Similar to the *normal callbacks* that hook into the lifecycle of an Active Record object, you can also define callbacks that get triggered when you add an object to or remove an object from an association collection.
 ```ruby
 class Firm < ActiveRecord::Base
