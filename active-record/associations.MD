@@ -471,7 +471,9 @@ Note: To trigger remove callbacks, you must use ```destroy``` / ```destroy_all``
 - ```firm.clients.destroy(client)```
 - ```firm.clients.destroy(*clients)```
 - ```firm.clients.destroy_all```
+
 delete / delete_all methods like the following do **not** trigger remove callbacks:
+
 - ```firm.clients.delete(client)```
 - ```firm.clients.delete(*clients)```
 - ```firm.clients.delete_all```
