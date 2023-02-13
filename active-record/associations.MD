@@ -455,6 +455,27 @@ class Firm < ActiveRecord::Base
   end
 end
 ```
+It's possible to stack callbacks by passing them as an array. Example:
+```ruby
+class Firm < ActiveRecord::Base
+  has_many: clients,
+    dependent: :destroy,
+    after_add: [:congratulate_client, -> (firm, record) { firm.log << "after_adding#{record.id}" }],
+    after_remove: :log_after_remove
+end
+```
+Possible callbacks are: ```before_add```, ```after_add```, ```before_remove```, and ```after_remove```.
+If any of the ```before_add``` callbacks throw an exception, the object will not be added to the collection.
+Similarly, if any of the ```before_remove``` callbacks throw an exception, the object will not be removed from the collection.
+Note: To trigger remove callbacks, you must use ```destroy``` / ```destroy_all``` methods. For example:
+- ```firm.clients.destroy(client)```
+- ```firm.clients.destroy(*clients)```
+- ```firm.clients.destroy_all```
+delete / delete_all methods like the following do **not** trigger remove callbacks:
+- ```firm.clients.delete(client)```
+- ```firm.clients.delete(*clients)```
+- ```firm.clients.delete_all```
+
 #### *A note on 'normal callbacks'*
 *The "normal callbacks" referred to in the Ruby on Rails documentation are the standard Active Record callbacks that are triggered at different points in the lifecycle of an Active Record object. These callbacks allow you to execute certain code at specific moments during the creation, update, or destruction of an object, such as before it is saved or after it is destroyed.*
 
