@@ -490,7 +490,53 @@ delete / delete_all methods like the following do **not** trigger remove callbac
 *```after_commit```*
 *By using these callbacks, you can add custom behavior to your models, such as automatically setting default values, auditing changes to the data, or sending notifications when an object is created or updated.*
 
+## Association Extensions
+The proxy objects that control the access to associations can be extended through anonymous modules. This is especially beneficial for adding new finders, creators and factory-type methods that are only used as part of this association.
+```ruby
+class Account < ActiveRecord::Base
+  has_many :people do
+    def find_or_create_by_name(name)
+      first_name, last_name = name.split(" ", 2)
+      find_or_create_by(first_name: first_name, last_name: last_name)
+    end
+  end
+end
 
+person = Account.first.people.find_or_create_by_name("David Heinemeier Hansson")
+person.first_name # => "David"
+person.last_name  # => "Heinemeier Hansson"
+```
+*In the context of ActiveRecord, a "proxy object" refers to an object that acts as an intermediary between the main object (such as the Account model in the example) and the associated objects (such as the Person objects in the example). The proxy object controls the access to the associated objects, and it is created when the association is defined. These new methods allow you to perform additional operations on the associated objects (such as Person) through the Account model's association.*
+
+If you need to share the same extensions between many associations, you can use a named extension module.
+
+```ruby
+module FindOrCreateByNameExtension
+  def find_or_create_by_name(name)
+      first_name, last_name = name.split(" ", 2)
+      find_or_create_by(first_name: first_name, last_name: last_name)
+  end
+end
+
+class Account < ActiveRecord::Base
+  has_many :people, -> { extending FindOrCreateByNameExtension }
+end
+class Company < ActiveRecord::Base
+  has_many :people, -> { extending FindOrCreateByNameExtension }
+end
+```
+*By adding the extensions to the proxy object, you can encapsulate the specific behavior of the association in a single place, which makes the code easier to maintain and reduces the risk of code duplication. ```find_or_create_by_name``` can now be used on both ```Account.people``` and ```Company.people```, as both associations are defined to use the ```FindOrCreateByNameExtension``` module.*
+
+Some extensions can only be made to work with knowledge of the association's internals. Extensions can access relevant state using the following methods (where items is the name of the association):
+
+- ```record.association(:items).owner``` - Returns the object the association is part of.
+*e.g ```person.association(:account).owner```*
+- ```record.association(:items).reflection``` - Returns the reflection object that describes the association.
+*e.g ```person.association(:account).reflection```*
+- ```record.association(:items).target``` - Returns the associated object for ```belongs_to``` and ```has_one```, or the collection of associated objects for ```has_many``` and ```has_and_belongs_to_many```.
+*e.g  ```person.association(:account).target```*
+
+However, inside the actual extension code, you will not have access to the record as above. In this case, you can access proxy_association. For example, record.association(:items) and record.items.proxy_association will return the same object, allowing you to make calls like proxy_association.owner inside association extensions.
 
 
 
