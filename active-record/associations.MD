@@ -538,8 +538,46 @@ Some extensions can only be made to work with knowledge of the association's int
 
 However, inside the actual extension code, you will not have access to the record as above. In this case, you can access proxy_association. For example, record.association(:items) and record.items.proxy_association will return the same object, allowing you to make calls like proxy_association.owner inside association extensions.
 
+## Association Join Models
+```has_many``` associations can be configured with a ```:through``` option to use an explicit join model to retrieve the data. This operates similarly to a ```has_and_belongs_to_many``` association. The advantage is that you are able to add validations, callbacks and extra attributes on the join model. Consider the following schema:
+```ruby
+class Author < ActiveRecord::Base
+  has_many :authorships
+  has_many :books, through: :authorships
+end
 
+class Authorship < ActiveRecord::Base
+  belongs_to :author
+  belongs_to :book
+end
 
+@author = Author.first
+@author.authorships.collect { |a| a.book } # selects all books that the author's authorships belong to
+@author.books                              # selects all books by using the Authorship join model
+```
+*Here we see the advantage of specifying the **through** option. Both methods will return the same result set of books associated with the author, but the second approach is more efficient since it only needs to join two tables instead of iterating over each associated authorship and its associated books.*
+
+You can also go through a has_many association on the join model:
+```ruby
+class Firm < ActiveRecord::Base
+  has_many   :clients
+  has_many   :invoices, through: :clients
+end
+
+class Client < ActiveRecord::Base
+  belongs_to :firm
+  has_many   :invoices
+end
+
+class Invoice < ActiveRecord::Base
+  belongs_to :client
+end
+
+@firm = Firm.first
+@firm.clients.flat_map { |c| c.invoices } # select all invoices for all clients of the firm
+@firm.invoices                            # selects all invoices by going through the Client join model
+```
+*Here we see the advantage of specifying the **through** option. Both methods will return the same result set of invoices associated with the firm, but the second approach is more efficient since it only needs to join two tables instead of iterating over each associated client and their associated invoices.*
 
 
 
