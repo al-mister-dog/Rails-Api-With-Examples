@@ -579,7 +579,31 @@ end
 ```
 *Here we see the advantage of specifying the **through** option. Both methods will return the same result set of invoices associated with the firm, but the second approach is more efficient since it only needs to join two tables instead of iterating over each associated client and their associated invoices.*
 
+Similarly you can go through a ```has_one``` association on the join model.
+```ruby
+class Group < ActiveRecord::Base
+  has_many   :users
+  has_many   :avatars, through: :users
+end
 
+class User < ActiveRecord::Base
+  belongs_to :group
+  has_one    :avatar
+end
+
+class Avatar < ActiveRecord::Base
+  belongs_to :user
+end
+
+@group = Group.first
+@group.users.collect { |u| u.avatar }.compact # select all avatars for all users in the group
+@group.avatars                                # selects all avatars by going through the User join model.
+```
+An important caveat with going through has_one or has_many associations on the join model is that these associations are read-only. For example, the following would not work following the previous example:
+```ruby
+@group.avatars << Avatar.new   # this would work if User belonged_to Avatar rather than the other way around
+@group.avatars.delete(@group.avatars.last)  # so would this
+```
 
 
 
